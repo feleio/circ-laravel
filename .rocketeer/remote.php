@@ -32,6 +32,7 @@ return [
     'shared'         => [
         'storage/logs',
         'storage/sessions',
+        '.env',
     ],
 
     // Execution
