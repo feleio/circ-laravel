@@ -392,7 +392,7 @@
                             <strong>Spent : 5.5 hrs Done : 4.5 hrs</strong>
                             <span class="pull-right text-muted">40% Complete</span>
                         </p>-->
-                        <div class="progress progress-striped active">
+                        <div class="progress ">
                             <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{$totalSpentProgressP}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$totalSpentProgressP}}%">
                                 <span>{{$totalSpent}}h</span>
                             </div>
@@ -401,7 +401,8 @@
                     <div>
                         <div class="progress">
                             <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{$totalDoneProgressP}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$totalDoneProgressP}}%">
-                                <span>{{$totalProgress}}% ({{$totalDone}}h)</span>
+                                <!--<span>{{$totalProgress}}% ({{$totalDone}}h)</span>-->
+                                <span>{{$totalDone}}h</span>
                             </div>
                             <div class="progress-bar progress-bar" role="progressbar" aria-valuenow="{{$totalPlanProgressP}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$totalPlanProgressP}}%">
                                 <span>{{$totalPlan}}h</span>
@@ -587,7 +588,7 @@
                                 @foreach($lists as $list)
                                 @if(count($list->cards) > 0 && $list->totalListPlan > 0)
                                 <?php
-                                    $progress = $list->totalListDone * 100 / $list->totalListPlan;
+                                    $progress = number_format($list->totalListDone * 100 / $list->totalListPlan, 1);
                                 ?>
                                 <div>
                                     <p>
@@ -605,7 +606,6 @@
                                 </div>
                             </div>
                             <!-- /.list-group -->
-                            <a href="#" class="btn btn-default btn-block">View All Alerts</a>
                         </div>
                         <!-- /.panel-body -->
                     </div>

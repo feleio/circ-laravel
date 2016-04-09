@@ -61,7 +61,7 @@ class TaskController extends Controller
             $list->totalListCancel = $totalListCancel;
         }
 
-        var_dump($lists[0]->cards[0]);
+        //var_dump($lists[0]->cards[0]);
         
         return view('trello.overview', [
             'lists' => $lists, 
