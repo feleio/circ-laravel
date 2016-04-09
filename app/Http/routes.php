@@ -23,6 +23,12 @@ Route::get('like/{count}', [
     'as' => 'like', 'uses' => 'likeme\LikeMeController@like'
     ]);
 
+Route::group(['prefix' => 'trello'], function () {
+    Route::post('save-tasks', [
+        'as' => 'save-tasks', 'uses' => 'trello\TaskController@saveTasks'
+        ]);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
