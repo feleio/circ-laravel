@@ -588,7 +588,7 @@
                                 @foreach($lists as $list)
                                 @if(count($list->cards) > 0 && $list->totalListPlan > 0)
                                 <?php
-                                    $progress = number_format($list->totalListDone * 100 / $list->totalListPlan, 1);
+                                    $progress = number_format($list->totalListDone * 100 / $list->totalListPlan, 0);
                                 ?>
                                 <div>
                                     <p>

@@ -4,13 +4,34 @@ namespace App\Http\Controllers\trello;
 
 use Illuminate\Http\Request;
 
+use DB;
+
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\Trello\Json;
 
 class TaskController extends Controller
 {
-    public function saveTasks(Request $request){
+    public function overview(Request $request)
+    {
         $jsonData = $request->input('data');
+
+        // insert new json
+        $json = new Json;
+        $json->json = $jsonData;
+        $json->save();
+
+        // remove older jsons
+        DB::connection('mysql_trello')->delete('delete from jsons where id not in ( select id from ( select id from jsons order by id desc limit 50)foo )');
+
+        $data = $this->parseJsonData($jsonData);
+
+        //var_dump($data['lists'][0]->cards[0]);
+        return view('trello.overview', $data);
+    }
+
+        private function parseJsonData($jsonData)
+    {
         $lists = json_decode($jsonData);
 
         $totalSpent = 0.0;
@@ -61,15 +82,13 @@ class TaskController extends Controller
             $list->totalListCancel = $totalListCancel;
         }
 
-        //var_dump($lists[0]->cards[0]);
-        
-        return view('trello.overview', [
+        return [
             'lists' => $lists, 
             'totalSpent' => $totalSpent, 
             'totalDone' => $totalDone, 
             'totalPlan' => $totalPlan, 
             'totalDelay' => $totalDelay, 
             'totalCancel' => $totalCancel
-            ]);
+            ];
     }
 }

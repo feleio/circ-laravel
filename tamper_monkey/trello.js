@@ -52,7 +52,7 @@ function post(path, parameters) {
 
 function getData(){
     var out = "";
-    var analysisRange = ["Todo","<-- current    later-->"];
+    var analysisRange = ["Daily actions","<-- current    later-->"];
     var isStart = false;
     var listsResults = [];
 
@@ -118,7 +118,7 @@ window.onload = function(){
         //alert(JSON.stringify(getData()));
         //$("head").append(JSON.stringify(getData()));
         
-        post("http://circ.app/trello/save-tasks", {data: JSON.stringify(getData())});
+        post("http://circ.app/trello/overview", {data: JSON.stringify(getData())});
         
     });
     
