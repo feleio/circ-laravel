@@ -10,7 +10,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Trello\Json;
 use App\Models\Trello\Task;
-use App\Models\Trello\TaskList;
+use App\Models\Trello\Tasklist;
 
 use Carbon\Carbon;
 
@@ -106,7 +106,7 @@ class TaskController extends Controller
 
     private function parseJsonData()
     {
-        $lists = TaskList::orderBy('updated_at','desc')->whereHas('tasks', function($query){
+        $lists = Tasklist::orderBy('updated_at','desc')->whereHas('tasks', function($query){
             $query->where('isStage',true);
         })->get();
 
