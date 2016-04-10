@@ -8,9 +8,9 @@ class Task extends Model
 {
     protected $connection = 'mysql_trello';
     
-    public function list()
+    public function tasklist()
     {
-        return $this->belongsTo('App\Models\Trello\List');
+        return $this->belongsTo('App\Models\Trello\Tasklist');
     }
 }
     

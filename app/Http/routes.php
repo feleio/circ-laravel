@@ -27,6 +27,20 @@ Route::group(['prefix' => 'trello'], function () {
     Route::post('overview', [
         'as' => 'overview', 'uses' => 'trello\TaskController@overview'
         ]);
+    Route::get('overview', [
+        'as' => 'overview-get', 'uses' => 'trello\TaskController@overviewGet'
+        ]);
+    Route::post('save-stage', [
+        'as' => 'save-stage', 'uses' => 'trello\TaskController@saveStage'
+        ]);
+
+
+    Route::get('history-overview', [
+        'as' => 'history-overview', 'uses' => 'trello\TaskController@historyOverview'
+        ]);
+    Route::post('history/{planDate}', [
+        'as' => 'history', 'uses' => 'trello\TaskController@history'
+        ]);
 });
 
 /*

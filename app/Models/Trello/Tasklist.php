@@ -4,7 +4,7 @@ namespace App\Models\Trello;
 
 use Illuminate\Database\Eloquent\Model;
 
-class List extends Model
+class Tasklist extends Model
 {
     protected $connection = 'mysql_trello';
 

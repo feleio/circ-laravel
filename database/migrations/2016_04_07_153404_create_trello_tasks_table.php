@@ -17,9 +17,9 @@ class CreateTrelloTasksTable extends Migration
             $table->string('name',50);
             $table->decimal('actual_hour', 10, 2)->default(0.0);
             $table->decimal('plan_hour', 10, 2)->default(0.0);
-            $table->integer('list_id');
+            $table->integer('tasklist_id');
             $table->enum('label',['None','Done','Cancel','Delay'])->default('None');
-            $table->timestamp('plan_date')->useCurrent();
+            $table->timestamp('plan_date')->nullable();
             $table->timestamps();
         });
     }
