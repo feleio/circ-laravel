@@ -27,7 +27,7 @@ class TaskController extends Controller
 
         // remove older jsons
         DB::connection('mysql_trello')->delete('delete from jsons where id not in ( select id from ( select id from jsons order by id desc limit 50)foo )');
-        
+
         $this->saveStagingTasks($jsonData);
         $data = $this->parseJsonData();
 
@@ -45,7 +45,7 @@ class TaskController extends Controller
     {
         $data = $this->parseJsonData();
 
-        return view('trello.overview',$data);
+        return view('trello.historyOverview',$data);
     }
 
     public function history($planDate)
@@ -115,12 +115,12 @@ class TaskController extends Controller
         $totalPlan = 0.0;
         $totalDelay = 0.0;
         $totalCancel = 0.0;
-    
+
         foreach($lists as $list){
             $totalListSpent = 0.0;
             $totalListDone = 0.0;
             $totalListPlan = 0.0;
-            $totalListDelay = 0.0;  
+            $totalListDelay = 0.0;
             $totalListCancel = 0.0;
 
             $tasks = $list->tasks()->where('isStage',true)->get();
@@ -155,11 +155,11 @@ class TaskController extends Controller
         }
 
         return [
-            'lists' => $lists, 
-            'totalSpent' => $totalSpent, 
-            'totalDone' => $totalDone, 
-            'totalPlan' => $totalPlan, 
-            'totalDelay' => $totalDelay, 
+            'lists' => $lists,
+            'totalSpent' => $totalSpent,
+            'totalDone' => $totalDone,
+            'totalPlan' => $totalPlan,
+            'totalDelay' => $totalDelay,
             'totalCancel' => $totalCancel
             ];
     }

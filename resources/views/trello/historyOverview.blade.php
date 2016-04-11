@@ -375,47 +375,11 @@
             </div>
             <!-- /.navbar-static-side -->
         </nav>
-        <?php
-            $totalProgressBase = $totalPlan + $totalDelay + $totalCancel;
-
-            $totalSpentProgressP = number_format($totalSpent * 100 / $totalProgressBase, 2);
-            $totalDoneProgressP = number_format($totalDone * 100 / $totalProgressBase, 2);
-            $totalPlanProgressP = number_format(( $totalPlan - $totalDone ) * 100 / $totalProgressBase, 2);
-            $totalDelaytProgressP = number_format($totalDelay * 100 / $totalProgressBase, 2);
-            $totalCanceltProgressP = number_format($totalCancel * 100 / $totalProgressBase, 2);
-            $totalProgress =  number_format($totalDone * 100 / $totalPlan, 1);
-        ?>
         <div id="page-wrapper">
             <div class="row">
             <hr/>
                 <div class="col-lg-12">
                     <div>
-                        <!--<p>
-                            <strong>Spent : 5.5 hrs Done : 4.5 hrs</strong>
-                            <span class="pull-right text-muted">40% Complete</span>
-                        </p>-->
-                        <div class="progress ">
-                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{$totalSpentProgressP}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$totalSpentProgressP}}%">
-                                <span>{{$totalSpent}}h</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{$totalDoneProgressP}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$totalDoneProgressP}}%">
-                                <!--<span>{{$totalProgress}}% ({{$totalDone}}h)</span>-->
-                                <span>{{$totalDone}}h</span>
-                            </div>
-                            <div class="progress-bar progress-bar" role="progressbar" aria-valuenow="{{$totalPlanProgressP}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$totalPlanProgressP}}%">
-                                <span>{{$totalPlan}}h</span>
-                            </div>
-                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{$totalDelaytProgressP}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$totalDelaytProgressP}}%">
-                                <span>{{$totalDelay}}h</span>
-                            </div>
-                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{$totalCanceltProgressP}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$totalCanceltProgressP}}%">
-                                <span>{{$totalCancel}}h</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -429,8 +393,6 @@
                                     <i class="fa fa-check fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$totalProgress}}%</div>
-                                    <div>&lt;{{$totalSpent}}h&gt; {{$totalDone}}h / {{$totalPlan}}h</div>
                                 </div>
                             </div>
                         </div>
@@ -535,59 +497,7 @@
                             <div id="morris-area-chart"></div>
                         </div>-->
                         <div class="panel-body">
-                            @foreach ($lists as $list)
-                            @if(count($list->tasks) > 0 && $list->totalListPlan > 0 )
-                            <p>
-                                <strong>{{$list->name}}</strong>
-                                <span class="pull-right text-muted">Total Plan {{$list->totalListPlan}} hr</span>
-                            </p>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>task</th>
-                                            <th>Actual hr</th>
-                                            <th>Plan hr</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($list->tasks()->where('isStage',true)->get() as $task)
-                                        <?php
-                                            $labelSpan = '';
-                                            if ($task->label == 'Done'){
-                                                $labelSpan = '<span class="label label-success">Done</span>';
-                                            } else if ($task->label == 'Delay'){
-                                                $labelSpan = '<span class="label label-warning">Delay</span>';
-                                            } else if ($task->label == 'Cancel'){
-                                                $labelSpan = '<span class="label label-danger">Cancel</span>';
-                                            }
-                                        ?>
-                                        <tr>
-                                            <td>{!!$labelSpan!!} {{$task->name}}</td>
-                                            <td>{{$task->actual_hour}}</td>
-                                            <td>{{$task->plan_hour}}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            @endif
-                            @endforeach
-                            <form action="save-stage" method="post">
-                                <div class='col-sm-6'>
-                                    <div class="form-group">
-                                        <div class='input-group date' id='datetimepicker1'>
-                                            <input type='text' class="form-control" name="planDate" />
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="pull-right">
-                                    <button type="submit" class="btn btn-default">Save</button>
-                                </div>
-                            </form>
+                            <div id="morris-area-chart"></div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -601,28 +511,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div class="list-group">
-                                @foreach($lists as $list)
-                                @if(count($list->tasks) > 0 && $list->totalListPlan > 0)
-                                <?php
-                                    $progress = number_format($list->totalListDone * 100 / $list->totalListPlan, 0);
-                                ?>
-                                <div>
-                                    <p>
-                                        <strong>{{$list->name}}</strong>
-                                        <span class="pull-right text-muted">{{$progress}}% Complete</span>
-                                    </p>
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{$progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$progress}}%">
-                                            <span class="sr-only"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endif
-                                @endforeach
-                                </div>
-                            </div>
-                            <!-- /.list-group -->
+
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -655,14 +544,33 @@
     <script src="../js/bootstrap-datetimepicker.min.js"></script>
 
     <script type="text/javascript">
-        
+
     </script>
     <script>
-        
+
         $(document).ready(function() {
             $('#datetimepicker1').datetimepicker({
                 format : 'YYYY-MM-DD',
                 defaultDate : '{{date("Y-m-d")}}'
+            });
+
+            Morris.Area({
+                element: 'morris-area-chart',
+                data: [{
+                    period: '2016-04-10',
+                    plan: 540,
+                    done: 200
+                }, {
+                    period: '2016-04-11',
+                    plan: 478,
+                    done: 340
+                }],
+                xkey: 'period',
+                ykeys: ['plan', 'done'],
+                labels: ['Plan', 'Done'],
+                hideHover: 'auto',
+                behaveLikeLine: true,
+                lineColors:['#337ab7','#5cb85c']
             });
         });
     </script>
