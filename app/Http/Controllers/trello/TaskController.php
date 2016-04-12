@@ -29,38 +29,50 @@ class TaskController extends Controller
         DB::connection('mysql_trello')->delete('delete from jsons where id not in ( select id from ( select id from jsons order by id desc limit 50)foo )');
 
         $this->saveStagingTasks($jsonData);
-        $data = $this->parseJsonData();
+
+        $lists = Tasklist::orderBy('updated_at','desc')->whereHas('tasks', function($query){
+            $query->where('isStage', '');
+        })->get();
+
+        $data = $this->getStageStat($lists, '');
 
         return view('trello.overview',$data);
     }
 
     public function overviewGet()
     {
-        $data = $this->parseJsonData();
+        $lists = Tasklist::orderBy('updated_at','desc')->whereHas('tasks', function($query){
+            $query->where('isStage', '');
+        })->get();
+        $data = $this->getStageStat($lists, '');
 
         return view('trello.overview',$data);
     }
 
     public function historyOverview()
     {
-        $data = $this->parseJsonData();
-
+        $data = ['planDateDatas'=>$this->getTaskStat()];
         return view('trello.historyOverview',$data);
     }
 
     public function history($planDate)
     {
+        $lists = Tasklist::whereHas('tasks', function($query)  use ($planDate){
+            $query->where('isStage',false)->whereDate('plan_date', '=', $planDate);
+        })->orderBy('updated_at','desc')->get();
 
-        return view('trello.overview',$data);
+        $data = $this->getStageStat($lists, $planDate);
+        $data['isPlanDateFound'] = count($lists) > 0;
+        $data['planDate'] = Carbon::createFromFormat('Y-m-d', $planDate);
+        return view('trello.history',$data);
     }
 
     public function saveStage(Request $request){
         $planDate = $request->input('planDate');
-        $carbon = Carbon::createFromFormat('Y-m-d', $planDate);
 
         Task::where('isStage', true)->update([
             'isStage' => false,
-            'plan_date' => $carbon]);
+            'plan_date' => $planDate]);
         return '';
     }
 
@@ -86,7 +98,7 @@ class TaskController extends Controller
             }
 
             foreach($list->cards as $card){
-                $label = '';
+                $label = 'None';
                 if(count($card->labels) > 0){
                     $label = $card->labels[0];
                 }
@@ -104,12 +116,8 @@ class TaskController extends Controller
         }
     }
 
-    private function parseJsonData()
+    private function getStageStat($lists, $planDate)
     {
-        $lists = Tasklist::orderBy('updated_at','desc')->whereHas('tasks', function($query){
-            $query->where('isStage',true);
-        })->get();
-
         $totalSpent = 0.0;
         $totalDone = 0.0;
         $totalPlan = 0.0;
@@ -123,11 +131,15 @@ class TaskController extends Controller
             $totalListDelay = 0.0;
             $totalListCancel = 0.0;
 
-            $tasks = $list->tasks()->where('isStage',true)->get();
+            if('' == $planDate){
+                $tasks = $list->tasks()->where('isStage',true)->get();
+            } else {
+                $tasks = $list->tasks()->where('isStage',false)->whereDate('plan_date', '=', $planDate)->get();
+            }
             foreach($tasks as $task){
                 $label = $task->label;
 
-                if($label == ''){
+                if($label == 'None'){
                     $totalSpent += $task->actual_hour;
                     $totalPlan += $task->plan_hour;
                     $totalListSpent += $task->actual_hour;
@@ -162,5 +174,9 @@ class TaskController extends Controller
             'totalDelay' => $totalDelay,
             'totalCancel' => $totalCancel
             ];
+    }
+
+    private function getTaskStat(){
+        return DB::connection('mysql_trello')->select("SELECT Date(t.plan_date) as dateonly, (select COALESCE(sum(plan_hour),0) from tasks t1 where Date(t1.plan_date) = dateonly and (t1.label = 'None' or t1.label = 'Done')) as plan, (select COALESCE(sum(plan_hour),0) from tasks t2 where Date(t2.plan_date) = dateonly and t2.label = 'Done') as done, (select COALESCE(sum(plan_hour),0) from tasks t3 where Date(t3.plan_date) = dateonly and t3.label = 'Delay') as delay, (select COALESCE(sum(plan_hour),0) from tasks t4 where Date(t4.plan_date) = dateonly and t4.label = 'Cancel') as cancel, (select COALESCE(sum(actual_hour),0) from tasks t5 where Date(t5.plan_date) = dateonly and t5.label = 'Done') as spent FROM tasks t where t.plan_date is not null and t.isStage = 0 group by dateonly order by dateonly desc");
     }
 }

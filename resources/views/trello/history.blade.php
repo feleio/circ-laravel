@@ -13,23 +13,23 @@
     <title>SB Admin 2 - Bootstrap Admin Theme</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="../theme/trello/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
-    <link href="../theme/trello/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
 
     <!-- Timeline CSS -->
-    <link href="../theme/trello/dist/css/timeline.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/dist/css/timeline.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="../theme/trello/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/dist/css/sb-admin-2.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="../theme/trello/bower_components/morrisjs/morris.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/bower_components/morrisjs/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="../theme/trello/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+    <link href="{{URL::to('/')}}/theme/trello/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="{{URL::to('/')}}/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -283,7 +283,10 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="{{URL::to('/trello')}}/overview"><i class="fa fa-dashboard fa-fw"></i> Overview</a>
+                        </li>
+                        <li>
+                            <a href="{{URL::to('/trello')}}/history-overview"><i class="fa fa-bar-chart-o fa-fw"></i> History</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
@@ -296,9 +299,6 @@
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
                         </li>
                         <li>
                             <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
@@ -376,18 +376,24 @@
             <!-- /.navbar-static-side -->
         </nav>
         <?php
-            $totalProgressBase = $totalPlan + $totalDelay + $totalCancel;
+            if($isPlanDateFound){
+                $totalProgressBase = $totalPlan + $totalDelay + $totalCancel;
 
-            $totalSpentProgressP = number_format($totalSpent * 100 / $totalProgressBase, 2);
-            $totalDoneProgressP = number_format($totalDone * 100 / $totalProgressBase, 2);
-            $totalPlanProgressP = number_format(( $totalPlan - $totalDone ) * 100 / $totalProgressBase, 2);
-            $totalDelaytProgressP = number_format($totalDelay * 100 / $totalProgressBase, 2);
-            $totalCanceltProgressP = number_format($totalCancel * 100 / $totalProgressBase, 2);
-            $totalProgress =  number_format($totalDone * 100 / $totalPlan, 1);
+                $totalSpentProgressP = number_format($totalSpent * 100 / $totalProgressBase, 2);
+                $totalDoneProgressP = number_format($totalDone * 100 / $totalProgressBase, 2);
+                $totalPlanProgressP = number_format(( $totalPlan - $totalDone ) * 100 / $totalProgressBase, 2);
+                $totalDelaytProgressP = number_format($totalDelay * 100 / $totalProgressBase, 2);
+                $totalCanceltProgressP = number_format(100-$totalDoneProgressP-$totalPlanProgressP-$totalDelaytProgressP, 2);
+                $totalProgress =  number_format($totalDone * 100 / $totalPlan, 1);
+            }
         ?>
         <div id="page-wrapper">
             <div class="row">
-            <hr/>
+                @if($isPlanDateFound)
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{$planDate->toFormattedDateString()}}</h1>
+                </div>
+
                 <div class="col-lg-12">
                     <div>
                         <!--<p>
@@ -418,8 +424,14 @@
                         </div>
                     </div>
                 </div>
+                @else
+                <div class="col-lg-12">
+                    <h1 class="page-header">Records not found on {{$planDate->toFormattedDateString()}} </h1>
+                </div>
+                @endif
             </div>
             <!-- /.row -->
+            @if($isPlanDateFound)
             <div class="row">
                 <div class="col-lg-4 col-md-6">
                     <div class="panel panel-green">
@@ -629,6 +641,7 @@
                 </div>
                 <!-- /.col-lg-4 -->
             </div>
+            @endif
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
@@ -637,28 +650,28 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="../theme/trello/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/jquery/dist/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="../theme/trello/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script src="../theme/trello/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/metisMenu/dist/metisMenu.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
-    <script src="../theme/trello/bower_components/raphael/raphael-min.js"></script>
-    <script src="../theme/trello/bower_components/morrisjs/morris.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/raphael/raphael-min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/morrisjs/morris.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="../theme/trello/dist/js/sb-admin-2.js"></script>
-    <script src="../js/moment.js"></script>
-    <script src="../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/dist/js/sb-admin-2.js"></script>
+    <script src="{{URL::to('/')}}/js/moment.js"></script>
+    <script src="{{URL::to('/')}}/js/bootstrap-datetimepicker.min.js"></script>
 
     <script type="text/javascript">
-        
+
     </script>
     <script>
-        
+
         $(document).ready(function() {
             $('#datetimepicker1').datetimepicker({
                 format : 'YYYY-MM-DD',

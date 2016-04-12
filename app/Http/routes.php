@@ -38,7 +38,7 @@ Route::group(['prefix' => 'trello'], function () {
     Route::get('history-overview', [
         'as' => 'history-overview', 'uses' => 'trello\TaskController@historyOverview'
         ]);
-    Route::post('history/{planDate}', [
+    Route::get('history/{planDate}', [
         'as' => 'history', 'uses' => 'trello\TaskController@history'
         ]);
 });

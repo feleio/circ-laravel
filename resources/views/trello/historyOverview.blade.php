@@ -13,23 +13,23 @@
     <title>SB Admin 2 - Bootstrap Admin Theme</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="../theme/trello/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
-    <link href="../theme/trello/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
 
     <!-- Timeline CSS -->
-    <link href="../theme/trello/dist/css/timeline.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/dist/css/timeline.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="../theme/trello/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/dist/css/sb-admin-2.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="../theme/trello/bower_components/morrisjs/morris.css" rel="stylesheet">
+    <link href="{{URL::to('/')}}/theme/trello/bower_components/morrisjs/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="../theme/trello/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+    <link href="{{URL::to('/')}}/theme/trello/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="{{URL::to('/')}}/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -283,7 +283,10 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="{{URL::to('/trello')}}/overview"><i class="fa fa-dashboard fa-fw"></i> Overview</a>
+                        </li>
+                        <li>
+                            <a href="{{URL::to('/trello')}}/history-overview"><i class="fa fa-bar-chart-o fa-fw"></i> History</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
@@ -296,9 +299,6 @@
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
                         </li>
                         <li>
                             <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
@@ -413,7 +413,7 @@
                                     <i class="fa fa-list fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$totalPlan}}h</div>
+                                    <div class="huge">h</div>
                                     <div>Plan</div>
                                 </div>
                             </div>
@@ -432,7 +432,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-12 text-right">
-                                    <div class="huge">{{$totalDelay}}h</div>
+                                    <div class="huge">h</div>
                                     <div>Delay</div>
                                 </div>
                             </div>
@@ -451,7 +451,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-12 text-right">
-                                    <div class="huge">{{$totalCancel}}h</div>
+                                    <div class="huge">h</div>
                                     <div>Cancel</div>
                                 </div>
                             </div>
@@ -468,10 +468,10 @@
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Progress
                             <div class="pull-right">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -497,26 +497,68 @@
                             <div id="morris-area-chart"></div>
                         </div>-->
                         <div class="panel-body">
-                            <div id="morris-area-chart"></div>
+                            <div id="progress-area-chart"></div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
                 </div>
                 <!-- /.col-lg-6 -->
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <div class="panel panel-default">
                     <div class="panel-heading">
-                            <i class="fa fa-bell fa-fw"></i> Notifications Panel
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Delay and cancel
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-
+                            <div class="panel-body">
+                                <div id="delay-cancel-line-chart"></div>
+                            </div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
                 </div>
-                <!-- /.col-lg-4 -->
+                <!-- /.col-lg-6 -->
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                    <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Delay and cancel
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Plan Date</th>
+                                                <th>Done hr</th>
+                                                <th>Plan hr</th>
+                                                <th>Delay hr</th>
+                                                <th>Cancel hr</th>
+                                                <th>Spent hr</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($planDateDatas as $planDateData)
+                                            <tr>
+                                                <td><a href="{{URL::to('/trello')}}/history/{{$planDateData->dateonly}}">{{$planDateData->dateonly}}</a></td>
+                                                <td>{{$planDateData->done}}</td>
+                                                <td>{{$planDateData->plan}}</td>
+                                                <td>{{$planDateData->delay}}</td>
+                                                <td>{{$planDateData->cancel}}</td>
+                                                <td>{{$planDateData->spent}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                </div>
+                <!-- /.col-lg-6 -->
             </div>
             <!-- /.row -->
         </div>
@@ -526,22 +568,22 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="../theme/trello/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/jquery/dist/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="../theme/trello/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script src="../theme/trello/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/metisMenu/dist/metisMenu.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
-    <script src="../theme/trello/bower_components/raphael/raphael-min.js"></script>
-    <script src="../theme/trello/bower_components/morrisjs/morris.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/raphael/raphael-min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/bower_components/morrisjs/morris.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="../theme/trello/dist/js/sb-admin-2.js"></script>
-    <script src="../js/moment.js"></script>
-    <script src="../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="{{URL::to('/')}}/theme/trello/dist/js/sb-admin-2.js"></script>
+    <script src="{{URL::to('/')}}/js/moment.js"></script>
+    <script src="{{URL::to('/')}}/js/bootstrap-datetimepicker.min.js"></script>
 
     <script type="text/javascript">
 
@@ -554,27 +596,66 @@
                 defaultDate : '{{date("Y-m-d")}}'
             });
 
+
+            <?php
+                $isFirst = true;
+            ?>
             Morris.Area({
-                element: 'morris-area-chart',
-                data: [{
-                    period: '2016-04-10',
-                    plan: 540,
-                    done: 200
-                }, {
-                    period: '2016-04-11',
-                    plan: 478,
-                    done: 340
-                }],
+                element: 'progress-area-chart',
+                data: [
+                @foreach($planDateDatas as $planDateData )
+                @if(!$isFirst)
+                ,
+                @endif
+                <?php $isFirst = false ?>
+
+                {
+                    period: '{{$planDateData->dateonly}}',
+                    plan: {{$planDateData->plan}},
+                    done: {{$planDateData->done}}
+                }
+                @endforeach
+                ],
                 xkey: 'period',
                 ykeys: ['plan', 'done'],
                 labels: ['Plan', 'Done'],
                 hideHover: 'auto',
                 behaveLikeLine: true,
+                resize: true,
                 lineColors:['#337ab7','#5cb85c']
+            });
+
+            <?php
+                $isFirst = true;
+            ?>
+            Morris.Line({
+                element: 'delay-cancel-line-chart',
+                data: [
+                @foreach($planDateDatas as $planDateData )
+                @if(!$isFirst)
+                ,
+                @endif
+                <?php $isFirst = false ?>
+
+                {
+                    period: '{{$planDateData->dateonly}}',
+                    delay: {{$planDateData->delay}},
+                    cancel: {{$planDateData->cancel}}
+                }
+                @endforeach
+                ],
+                xkey: 'period',
+                ykeys: ['delay', 'cancel'],
+                labels: ['Delay', 'Cancel'],
+                hideHover: 'auto',
+                resize: true,
+                lineColors:['#f0ad4e','#d9534f']
             });
         });
     </script>
 </body>
 
 </html>
+
+
 
