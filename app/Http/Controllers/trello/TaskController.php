@@ -31,7 +31,7 @@ class TaskController extends Controller
         $this->saveStagingTasks($jsonData);
 
         $lists = Tasklist::orderBy('updated_at','desc')->whereHas('tasks', function($query){
-            $query->where('isStage', '');
+            $query->where('isStage', true);
         })->get();
 
         $data = $this->getStageStat($lists, '');
@@ -42,7 +42,7 @@ class TaskController extends Controller
     public function overviewGet()
     {
         $lists = Tasklist::orderBy('updated_at','desc')->whereHas('tasks', function($query){
-            $query->where('isStage', '');
+            $query->where('isStage', true);
         })->get();
         $data = $this->getStageStat($lists, '');
 
